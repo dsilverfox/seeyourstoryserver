@@ -23,7 +23,7 @@ const Characters = db.define('characters',{
         type: Number,
     },
     dob: {
-        type: DataTypes.Date,
+        type: DataTypes.DATE,
         allowNull: false
     }
 

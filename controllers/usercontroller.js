@@ -35,13 +35,54 @@ router.post('/signup', async (req, res) => {
 
 });
 
+router.post('/login', async (req, res) => {
+    const {username, password} = req.body.user;
+
+    try{
+        await models.UsersModel.findOne({
+            where: {username: username}
+        })
+        .then(
+            user => {
+                if (user) {
+                    bcrypt.compare(password, user.password,(err, matches)=>{
+                        if(matches) {
+                            let token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: 60*60*24})
+                            res.json({
+                                user: user,
+                                message: 'logged in',
+                                sessionToken: `Bearer ${token}`
+                            })
+                        } else {
+                            res.status(502).send({
+                                error: 'Bad Gateway'
+                            })
+                        }
+                    })
+                } else {
+                    res.status(500).send ({
+                        error: 'Failed to Authenticate'
+                    })
+                }
+            }
+        )
+    } catch (err) {
+        res.status(501).send ({
+            error: "server does not support this functionality."
+        })
+    }
+})
+
 router.get('/userinfo', async (req, res) => {
     try {
         await models.UsersModel.findAll({
             include: [{
-                model: models.PostsModel,
+                model: models.CharactersModel,
                 include: [{
-                    model: models.CommentModel
+                    model: models.JournalModel
+                }],
+                include: [{
+                    model: models.StoriesModel
                 }]
             }]
         })
