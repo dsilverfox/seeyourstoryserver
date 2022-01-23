@@ -1,4 +1,4 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes, DATE } = require("sequelize");
 const db = require("../db");
 
 const Journal = db.define("journal", {
@@ -10,6 +10,10 @@ const Journal = db.define("journal", {
     },
     title: {
         type: DataTypes.TEXT,
+        allowNull: false,
+    },
+    date: {
+        type: DataTypes.DATE,
         allowNull: false,
     },
     content: {
