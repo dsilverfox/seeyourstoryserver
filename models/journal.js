@@ -1,4 +1,4 @@
-const { DataTypes, DATE } = require("sequelize");
+const { DataTypes } = require("sequelize");
 const db = require("../db");
 
 const Journal = db.define("journal", {

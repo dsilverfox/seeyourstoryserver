@@ -14,6 +14,7 @@ app.use(middleware.CORS);
 app.use(express.json());
 
 // endpoints
+//possible problem with /auth
 app.use('/auth', controllers.userscontroller);
 app.use(middleware.validateSession);
 app.use('/characters', controllers.charactercontroller);
