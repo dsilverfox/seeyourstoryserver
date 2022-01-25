@@ -7,19 +7,19 @@ const CharactersModel = require('./characters');
 
 UsersModel.hasMany(CharactersModel);
 UsersModel.hasMany(StoriesModel);
-// StoriesModel.hasMany(CharactersModel);
+StoriesModel.hasMany(CharactersModel);
 CharactersModel.hasOne(JournalModel);
 
 CharactersModel.belongsTo(UsersModel);
 JournalModel.belongsTo(CharactersModel);
-// StoriesModel.belongsTo(UsersModel);
+StoriesModel.belongsTo(UsersModel);
 
 module.exports = {
     dbConnection: db,
     models: {
         UsersModel,
         JournalModel,
-        // StoriesModel,
+        StoriesModel,
         CharactersModel
     }
 };

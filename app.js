@@ -12,11 +12,10 @@ const app = express();
 // middleware
 app.use(middleware.CORS);
 app.use(express.json());
+app.use(middleware.validateSession);
 
 // endpoints
-//possible problem with /auth
 app.use('/auth', controllers.userscontroller);
-app.use(middleware.validateSession);
 app.use('/characters', controllers.charactercontroller);
 app.use('/journal', controllers.journalcontroller);
 app.use('/story', controllers.storiescontroller);

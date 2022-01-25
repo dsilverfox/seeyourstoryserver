@@ -17,14 +17,14 @@ const Characters = db.define('characters',{
         allowNull: true,
     },
     gender: {
-        type: String
+        type: String,
     },
     age:{
         type: Number,
     },
     dob: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
     }
 
 })
