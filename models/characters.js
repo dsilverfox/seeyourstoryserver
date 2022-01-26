@@ -6,25 +6,25 @@ const Characters = db.define('characters',{
         type: DataTypes.UUID,
         primaryKey:true,
         defaultValue: DataTypes.UUIDV4,
-        allowNull: false,
+        allowNull: false
     },
     firstname: {
-        type: String,
-        allowNull: true,
+        type: DataTypes.STRING,
+        allowNull: true
     },
     lastname: {
-        type: String,
-        allowNull: true,
+        type: DataTypes.STRING,
+        allowNull: true
     },
     gender: {
-        type: String,
+        type: DataTypes.STRING
     },
     age:{
-        type: Number,
+        type: DataTypes.INTEGER
     },
     dob: {
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: false
     }
 
 })

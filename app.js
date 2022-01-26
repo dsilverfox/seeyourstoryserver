@@ -12,25 +12,24 @@ const app = express();
 // middleware
 app.use(middleware.CORS);
 app.use(express.json());
-app.use(middleware.validateSession);
 
 // endpoints
 app.use('/auth', controllers.userscontroller);
+
+// app.use(middleware.validateSession);
 app.use('/characters', controllers.charactercontroller);
 app.use('/journal', controllers.journalcontroller);
 app.use('/story', controllers.storiescontroller);
 
-// database auth & sync
-try {
-    dbConnection
-        .authenticate()
-        .then(async () => await dbConnection.sync(  /*{force: true}*/)) 
-        .then(() => {
-            app.listen(process.env.PORT, () => {
-                console.log(`[SERVER]: App is listening on ${process.env.PORT}`);
-            });
-        });
-} catch (err) {
-    console.log('[SERVER]: Server crashed');
-    console.log(err);
-}
+dbConnection.authenticate()
+    .then(() => dbConnection.sync())
+    .then(() => {
+        app.listen(process.env.PORT, () => {
+            console.log(`[Server]: App is listening on ${process.env.PORT}.`)
+        })
+    })
+    .catch((err) => {
+        console.log(`[Server]: Server crashed. Error = ${err}`)
+    })
+
+/*{force: true}*/

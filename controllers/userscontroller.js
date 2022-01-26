@@ -5,6 +5,12 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { UniqueConstraintError } = require('sequelize/lib/errors');
 
+
+//Test Route
+router.get('/practice', (req, res) => {
+    res.send('Hey!! This is a practice route!')
+});
+
 router.post('/signup', async (req, res) => {
     const { username, password } = req.body.user;
     try {
@@ -82,9 +88,9 @@ router.get('/userinfo', async (req, res) => {
                 include: [{
                     model: models.JournalModel
                 }],
-                include: [{
-                    model: models.StoriesModel
-                }]
+            }],
+            include: [{
+                model: models.StoriesModel
             }]
         })
             .then(

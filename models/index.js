@@ -1,6 +1,6 @@
 const db = require('../db');
 
-const UsersModel = require ('./users');
+const UsersModel = require('./users');
 const JournalModel = require('./journal');
 const StoriesModel = require('./stories');
 const CharactersModel = require('./characters');

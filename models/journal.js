@@ -12,10 +12,6 @@ const Journal = db.define("journal", {
         type: DataTypes.TEXT,
         allowNull: false,
     },
-    date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-    },
     content: {
         type: DataTypes.TEXT,
         allowNull: true,

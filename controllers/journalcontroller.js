@@ -2,7 +2,12 @@ const express = require('express');
 const router = express.Router();
 const { models } = require('../models');
 
-router.post('/journal', async(req, res) => {
+//Test Route
+router.get('/practice', (req, res) => {
+    res.send('Hey!! This is a practice route!')
+});
+
+router.post('/create', async(req, res) => {
     const {title, content} = req.body.journal
     try {
         await models.JournalModel.create({
