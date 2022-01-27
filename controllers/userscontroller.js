@@ -4,6 +4,7 @@ const { models } = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { UniqueConstraintError } = require('sequelize/lib/errors');
+let validateJWT = require("../middleware/validate-session");
 
 
 //Test Route
@@ -11,6 +12,7 @@ router.get('/practice', (req, res) => {
     res.send('Hey!! This is a practice route!')
 });
 
+//USER SIGNUP
 router.post('/signup', async (req, res) => {
     const { username, password } = req.body.user;
     try {
@@ -42,7 +44,8 @@ router.post('/signup', async (req, res) => {
 
 });
 
-router.post('/login', async (req, res) => {
+//USER LOGIN
+router.post('/login', validateJWT, async (req, res) => {
     const {username, password} = req.body.user;
 
     try{
@@ -80,6 +83,65 @@ router.post('/login', async (req, res) => {
     }
 })
 
+//USER VIEW ACCOUNT
+router.get('/view', validateJWT, async (req, res) => {
+    const { id } = req.user
+    try {
+        const userProfile = await UsersModel.findAll({
+            where: {
+                owner_id: id
+            }
+        })
+        res.status(200).json(userProfile);
+    } catch (err) {
+        res.status(500).json({ Error: err })
+    }
+})
+//USER EDIT PROFILE
+
+router.put("/update", validateJWT, async (req, res) => {
+    const { username } = req.body.user;
+    const owner_id = req.user.id;
+
+    const query = {
+        where: {
+            owner_id: owner_id
+        },
+    };
+
+    const updatedUser = {
+        username: username,
+    };
+
+    try {
+        const update = await UsersModel.update(updatedUser, query);
+        res.status(200).json(update);
+    } catch (err) {
+        res.status(500).json({ error: err });
+    }
+});
+
+//USER DELETE ACCOUNT
+
+router.delete('/delete/:id', validateJWT, async (req, res) =>{
+    const id = req.user.id;
+    try {
+    const query = {
+        where: {
+            id: id
+        },
+    };
+    await UsersModel.destroy(query);
+    res.status(200).json({message: "User Removed"});
+    } catch (err) {
+        res.status(500).json({error:err})
+    }  
+})
+
+/**ADMIN ENDPOINTS**/
+// Admin account has the ability to search all users and all of the posts stories and Characters. Admin has the right to delete any user.
+
+//Admin View All Users (needs validation for admin rights.)
 router.get('/userinfo', async (req, res) => {
     try {
         await models.UsersModel.findAll({
@@ -107,4 +169,19 @@ router.get('/userinfo', async (req, res) => {
     };
 });
 
+//ADMIN DELETE USER
+router.delete('/delete/:id', validateJWT, async (req, res) => {
+    const id = req.user.id;
+    try {
+        const query = {
+            where: {
+                id: id
+            },
+        };
+        await UsersModel.destroy(query);
+        res.status(200).json({ message: "User Removed" });
+    } catch (err) {
+        res.status(500).json({ error: err })
+    }
+})
 module.exports = router;

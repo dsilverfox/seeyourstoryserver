@@ -15,8 +15,6 @@ app.use(express.json());
 
 // endpoints
 app.use('/auth', controllers.userscontroller);
-
-// app.use(middleware.validateSession);
 app.use('/characters', controllers.charactercontroller);
 app.use('/journal', controllers.journalcontroller);
 app.use('/story', controllers.storiescontroller);
