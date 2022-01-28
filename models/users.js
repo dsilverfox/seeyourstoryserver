@@ -19,8 +19,8 @@ const Users = db.define("users", {
         allowNull: false,
     },
     hasAdmin: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
+        type: DataTypes.ENUM('admin', 'user'),
+        allowNull: false
     }
 });
 

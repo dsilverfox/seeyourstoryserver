@@ -38,7 +38,7 @@ router.post('/create', validateJWT, async (req, res) => {
 router.get('/view', validateJWT, async (req, res) => {
     const { id } = req.user
     try {
-        const characterPage = await CharactersModel.findAll({
+        const characterPage = await models.CharactersModel.findAll({
             where: {
                 owner_id: id
             }
@@ -53,12 +53,11 @@ router.get('/view', validateJWT, async (req, res) => {
 
 router.get('/view/:id', validateJWT, async (req, res) => {
     const { id } = req.user
-    const character_id = req.params.id
     try {
-        const characterPage = await CharactersModel.findAll({
+        const characterPage = await models.CharactersModel.findAll({
             where: {
                 owner_id: id,
-                character_id:character_id
+                character_id: req.params.id
             }
         })
         res.status(200).json(characterPage);
@@ -87,7 +86,7 @@ router.put("/update", validateJWT, async (req, res) => {
     };
 
     try {
-        const update = await CharactersModel.update(updatedCharacter, query);
+        const update = await models.CharactersModel.update(updatedCharacter, query);
         res.status(200).json(update);
     } catch (err) {
         res.status(500).json({ error: err });

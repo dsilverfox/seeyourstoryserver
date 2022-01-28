@@ -36,7 +36,7 @@ router.post('/create', validateJWT, async (req, res) => {
 router.get('/view', validateJWT, async(req, res) => {
         const{id}= req.user
         try {
-            const userStory = await StoriesModel.findAll({
+            const userStory = await models.StoriesModel.findAll({
                 where: {
                     owner_id: id
                 }
@@ -53,7 +53,7 @@ router.get('/view/:id', validateJWT, async (req, res) => {
     const { id } = req.user
     const story_id = req.params.id
     try {
-        const storyPage = await StoriesModel.findAll({
+        const storyPage = await models.StoriesModel.findAll({
             where: {
                 owner_id: id,
                 story_id: story_id
@@ -82,7 +82,7 @@ router.put("/update", validateJWT, async (req, res) => {
             };
 
             try {
-                const update = await StoriesModel.update(updatedStory, query);
+                const update = await models.StoriesModel.update(updatedStory, query);
                 res.status(200).json(update);
             } catch(err) {
                 res.status(500).json({error:err});
@@ -108,4 +108,5 @@ router.delete('/delete/id', validateJWT, async (req, res) => {
                 res.status(500).json({error: err});
             }
         })
+        
 module.exports = router;

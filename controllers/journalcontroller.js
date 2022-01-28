@@ -35,7 +35,7 @@ router.post('/create', validateJWT, async(req, res) => {
 router.get('/view', validateJWT, async (req, res) => {
     const { id } = req.user
     try {
-        const characterJournal = await JournalModel.findAll({
+        const characterJournal = await models.JournalModel.findAll({
             where: {
                 owner_id: id
             }
@@ -45,6 +45,7 @@ router.get('/view', validateJWT, async (req, res) => {
         res.status(500).json({ Error: err })
     }
 })
+
 //EDIT Journal
 router.put("/update", validateJWT, async (req, res) => {
     const { title, content } = req.body.story;
@@ -63,7 +64,7 @@ router.put("/update", validateJWT, async (req, res) => {
     };
 
     try {
-        const update = await JournalModel.update(updatedJournal, query);
+        const update = await models.JournalModel.update(updatedJournal, query);
         res.status(200).json(update);
     } catch (err) {
         res.status(500).json({ error: err });
