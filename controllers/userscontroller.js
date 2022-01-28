@@ -22,7 +22,7 @@ router.post('/signup', async (req, res) => {
         })
             .then(
                 user => {
-                    let token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 });
+                    let token = jwt.sign({ id: user.id, hasAdmin:user.hasAdmin }, process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 });
                     res.status(201).json({
                         user: user,
                         message: 'user created',
@@ -57,7 +57,7 @@ router.post('/login', validateJWT, async (req, res) => {
                 if (user) {
                     bcrypt.compare(password, user.password,(err, matches)=>{
                         if(matches) {
-                            let token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: 60*60*24})
+                            let token = jwt.sign({ id: user.id, hasAdmin: user.hasAdmin}, process.env.JWT_SECRET, {expiresIn: 60*60*24})
                             res.json({
                                 user: user,
                                 message: 'logged in',
@@ -123,6 +123,8 @@ router.delete('/delete/:id', validateJWT, async (req, res) =>{
 
 //ADMIN VIEW ALL USERS VERIFIED
 router.get('/userinfo', async (req, res) => {
+    const { hasAdmin } = req.user.hasAdmin
+    if (hasAdmin) {
     try {
         await models.UsersModel.findAll({
             include: [{
@@ -147,11 +149,18 @@ router.get('/userinfo', async (req, res) => {
             error: `Failed to retrieve users: ${err}`
         });
     };
+    } else {
+        res.status(401).json({
+            message: "I can't do that. You're not an admin."
+        })
+    }
 });
 
-//ADMIN DELETE USER -- VERIFIED (Requires Bearer Token and ID manual enter.)
+//ADMIN DELETE USER -- VERIFIED (Requires Admin Bearer Token and ID manual enter.)
 router.delete('/delete/:id', validateJWT, async (req, res) => {
     const id = req.user.id;
+    const {hasAdmin} = req.user.hasAdmin
+    if(hasAdmin) {
     try {
         const query = {
             where: {
@@ -162,6 +171,8 @@ router.delete('/delete/:id', validateJWT, async (req, res) => {
         res.status(200).json({ message: "User Removed" });
     } catch (err) {
         res.status(500).json({ error: err })
+    } } else {
+        res.status(401).json({message: "I can't do that. You're not an admin."})
     }
 })
 module.exports = router;

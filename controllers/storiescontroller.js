@@ -32,9 +32,9 @@ router.post('/create', validateJWT, async (req, res) => {
     };
 });
 
-//VIEW STORY
+//VIEW ALL STORIES
 router.get('/view', validateJWT, async(req, res) => {
-        const{id}= req.user
+        const{id}= req.user.id
         try {
             const userStory = await models.StoriesModel.findAll({
                 where: {
@@ -47,7 +47,7 @@ router.get('/view', validateJWT, async(req, res) => {
             }
         })
 
-// VIEW ONE character
+// VIEW ONE STORY
 
 router.get('/view/:id', validateJWT, async (req, res) => {
     const { id } = req.user
@@ -108,5 +108,5 @@ router.delete('/delete/id', validateJWT, async (req, res) => {
                 res.status(500).json({error: err});
             }
         })
-        
+
 module.exports = router;
