@@ -33,19 +33,19 @@ router.post('/create', validateJWT, async (req, res) => {
 });
 
 //VIEW ALL STORIES
-router.get('/view', validateJWT, async(req, res) => {
-        const{id}= req.user.id
-        try {
-            const userStory = await models.StoriesModel.findAll({
-                where: {
-                    owner_id: id
-                }
-            })
-            res.status(200).json(userStory);
-            } catch(err) {
-                res.status(500).json({Error: err})
+router.get("/view", validateJWT, async (req, res) => {
+    const { id } = req.user;
+    try {
+        const userStories = await StoriesModel.findAll({
+            where: {
+                owner: id
             }
-        })
+        });
+        res.status(200).json(userStories);
+    } catch (err) {
+        res.status(500).json({ error: err });
+    }
+});
 
 // VIEW ONE STORY
 
