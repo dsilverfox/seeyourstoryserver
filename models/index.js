@@ -14,6 +14,7 @@ CharactersModel.belongsTo(UsersModel);
 JournalModel.belongsTo(CharactersModel);
 StoriesModel.belongsTo(UsersModel);
 
+
 module.exports = {
     dbConnection: db,
     models: {

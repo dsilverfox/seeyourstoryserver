@@ -40,7 +40,7 @@ router.get("/view", validateJWT, async (req, res) => {
         const userStories = await StoriesModel.findAll({
             where: {
                 userId: userId
-            }
+           }
         });
         res.status(200).json(userStories);
     } catch (err) {

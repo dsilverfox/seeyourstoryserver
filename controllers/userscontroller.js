@@ -20,6 +20,7 @@ router.post('/signup', async (req, res) => {
             username: username,
             password: bcrypt.hashSync(password, 10),
             hasAdmin: hasAdmin
+
         })
             .then(
                 user => {

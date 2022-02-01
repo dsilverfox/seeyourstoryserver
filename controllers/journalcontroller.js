@@ -9,6 +9,7 @@ router.get('/practice', (req, res) => {
 });
 
 //CREATE JOURNAL
+
 router.post('/create', validateJWT, async (req, res) => {
     const { title, content } = req.body.journal
     try {
@@ -24,7 +25,7 @@ router.post('/create', validateJWT, async (req, res) => {
                     })
                 }
             )
-    } catch (err) {
+   } catch (err) {
         res.status(500).json({
             error: `Failed to Create Journal: ${err}`
         });

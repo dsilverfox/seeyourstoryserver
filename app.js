@@ -31,3 +31,4 @@ dbConnection.authenticate()
         console.log(`[Server]: Server crashed. Error = ${err}`)
     })
 
+
