@@ -15,11 +15,12 @@ router.get('/practice', (req, res) => {
 
 //USER SIGNUP -- Verified
 router.post('/signup', async (req, res) => {
-    const { username, password } = req.body.user;
+    const { username, password, hasAdmin } = req.body.user;
     try {
         await models.UsersModel.create({
             username: username,
-            password: bcrypt.hashSync(password, 10)
+            password: bcrypt.hashSync(password, 10),
+            hasAdmin: hasAdmin
         })
             .then(
                 user => {

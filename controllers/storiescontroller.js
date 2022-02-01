@@ -36,11 +36,11 @@ router.post('/create', validateJWT, async (req, res) => {
 
 //VIEW ALL STORIES
 router.get("/view", validateJWT, async (req, res) => {
-    const { id } = req.user;
+    const { id } = req.user.id;
     try {
         const userStories = await StoriesModel.findAll({
             where: {
-                userId: id
+                id: id
             }
         });
         res.status(200).json(userStories);
