@@ -124,8 +124,6 @@ router.delete('/delete/:id', validateJWT, async (req, res) =>{
 
 //ADMIN VIEW ALL USERS VERIFIED
 router.get('/userinfo', adminSession, async (req, res) => {
-    const { hasAdmin } = req.user.hasAdmin
-    if (hasAdmin) {
     try {
         await models.UsersModel.findAll({
             include: [{
@@ -150,11 +148,6 @@ router.get('/userinfo', adminSession, async (req, res) => {
             error: `Failed to retrieve users: ${err}`
         });
     };
-    } else {
-        res.status(401).json({
-            message: "I can't do that. You're not an admin."
-        })
-    }
 });
 
 //ADMIN DELETE USER -- VERIFIED (Requires Admin Bearer Token and ID manual enter.)
