@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { UniqueConstraintError } = require('sequelize/lib/errors');
 let validateJWT = require("../middleware/validate-session");
+let adminSession = require("../middleware/admin-session");
 
 
 //Test Route -- Verified
@@ -122,7 +123,7 @@ router.delete('/delete/:id', validateJWT, async (req, res) =>{
 //Admin View All Users (needs validation for admin rights.)
 
 //ADMIN VIEW ALL USERS VERIFIED
-router.get('/userinfo', async (req, res) => {
+router.get('/userinfo', adminSession, async (req, res) => {
     const { hasAdmin } = req.user.hasAdmin
     if (hasAdmin) {
     try {
@@ -157,7 +158,7 @@ router.get('/userinfo', async (req, res) => {
 });
 
 //ADMIN DELETE USER -- VERIFIED (Requires Admin Bearer Token and ID manual enter.)
-router.delete('/delete/:id', validateJWT, async (req, res) => {
+router.delete('/delete/:id', adminSession, async (req, res) => {
     const id = req.user.id;
     const {hasAdmin} = req.user.hasAdmin
     if(hasAdmin) {
