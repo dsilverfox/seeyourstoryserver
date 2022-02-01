@@ -13,9 +13,11 @@ router.get('/practice', (req, res) => {
 router.post('/create', validateJWT, async (req, res) => {
     const { title, content } = req.body.stories
     try {
+        const userId = await req.user.id
         await models.StoriesModel.create({
             title: title,
             content: content,
+            userId: userId
         })
             .then(
                 stories => {
@@ -38,7 +40,7 @@ router.get("/view", validateJWT, async (req, res) => {
     try {
         const userStories = await StoriesModel.findAll({
             where: {
-                owner: id
+                userId: id
             }
         });
         res.status(200).json(userStories);
