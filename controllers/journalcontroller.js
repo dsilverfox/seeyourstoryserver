@@ -12,9 +12,11 @@ router.get('/practice', (req, res) => {
 router.post('/create', validateJWT, async(req, res) => {
     const {title, content} = req.body.journal
     try {
+        const characterId = await req.characters.id
         await models.JournalModel.create({
             title: title,
             content: content,
+            characterId: characterId
         })
         .then(
             journal => {

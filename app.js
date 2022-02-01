@@ -21,6 +21,7 @@ app.use('/story', controllers.storiescontroller);
 
 dbConnection.authenticate()
     .then(() => dbConnection.sync())
+    // .then(() => dbConnection.sync({force:true}))
     .then(() => {
         app.listen(process.env.PORT, () => {
             console.log(`[Server]: App is listening on ${process.env.PORT}.`)
