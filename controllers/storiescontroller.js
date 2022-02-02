@@ -111,9 +111,10 @@ router.delete('/delete/:storyId', validateJWT, async (req, res) => {
                     }
                 };
 
-                await StoriesModel.destroy(query);
+                await models.StoriesModel.destroy(query);
                 res.status(200).json({message: 'Story Removed'});
             } catch(err) {
+                console.log(err)
                 res.status(500).json({error: err});
             }
         })

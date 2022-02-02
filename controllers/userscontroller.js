@@ -85,7 +85,7 @@ router.post('/login', validateJWT, async (req, res) => {
     }
 })
 
-//USER VIEW ACCOUNT -- Failed
+//USER VIEW ACCOUNT -- verified
 router.get('/view', validateJWT, async (req, res) => {
     const { id } = req.user
     try {

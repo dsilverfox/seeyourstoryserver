@@ -54,17 +54,18 @@ router.get('/view', validateJWT, async (req, res) => {
 
 //VIEW ONE character
 
-router.get('/view/:id', validateJWT, async (req, res) => {
-    const { id } = req.user
+router.get('/view/:characterId', validateJWT, async (req, res) => {
+    const  userId  = req.user.id
     try {
         const characterPage = await models.CharactersModel.findAll({
             where: {
-                owner_id: id,
-                character_id: req.params.id
+                userId: userId,
+                id: req.params.characterId
             }
         })
         res.status(200).json(characterPage);
     } catch (err) {
+        console.log(err)
         res.status(500).json({ Error: err })
     }
 })
