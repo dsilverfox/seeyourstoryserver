@@ -100,21 +100,22 @@ router.put("/update/:characterId", validateJWT, async (req, res) => {
 });
 
 //DELETE character
-router.delete('/delete/:id', validateJWT, async (req, res) => {
-    const owner_id = req.user.id;
-    const character_id = req.params.id;
+router.delete('/delete/:characterId', validateJWT, async (req, res) => {
+    const userId = req.user.id
+    const characterId = req.params.characterId;
 
     try {
         const query = {
             where: {
-                id: character_id,
-                owner_id: owner_id
+                id: characterId,
+                userId: userId
             },
         };
 
-        await CharactersModel.destroy(query);
+        await models.CharactersModel.destroy(query);
         res.status(200).json({ message: 'Character Removed' });
     } catch (err) {
+        console.log(err)
         res.status(500).json({ error: err });
     }
 })
