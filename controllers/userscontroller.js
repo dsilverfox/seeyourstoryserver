@@ -127,6 +127,7 @@ router.delete('/delete', validateJWT, async (req, res) =>{
 
 //ADMIN VIEW ALL USERS VERIFIED
 router.get('/userinfo', adminSession, async (req, res) => {
+    console.log("User:", req.user)
     try {
         await models.UsersModel.findAll({
             include: [{
