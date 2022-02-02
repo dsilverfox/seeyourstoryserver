@@ -41,12 +41,12 @@ router.get("/view", validateJWT, async (req, res) => {
     try {
         const userStories = await models.StoriesModel.findAll({
             where: {
-                userId: "fbbfe501-87aa-44e9-83d3-d6d4882f970e"
+                userId: userId
             }
         });
         res.status(200).json(userStories);
     } catch (err) {
-        console.log(err)
+        // console.log(err)
         res.status(500).json(err);
     }
 });
