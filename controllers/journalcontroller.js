@@ -64,19 +64,15 @@ router.get('/view/:characterId', validateJWT, async (req, res) => {
 
 //EDIT Journal
 router.put("/update/:journalId", validateJWT, async (req, res) => {
-     //const {title, content} = req.body.journal
-     // TypeError: Cannot destructure property 'title' of 'req.body.journal' as it is undefined.
-     // set title and content = req.journal.(title or content respectively) still returns error cannot read property title of undefined.
-    const journalId = req.params.id
-    const title = req.journal.title
-    const content = req.journal.content
-    console.log("Journal ID:", journalId)
-    console.log("Title:", title)
-    console.log("Content:", content)
+    const {title, content} = req.body.journal
+    const journalId = req.params.journalId
+    // console.log("Journal ID:", journalId)
+    // console.log("Title:", title)
+    // console.log("Content:", content)
 
     const query = {
         where: {
-            journalId: journalId
+            id: journalId
         },
     };
 

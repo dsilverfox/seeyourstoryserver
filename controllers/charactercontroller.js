@@ -70,14 +70,16 @@ router.get('/view/:id', validateJWT, async (req, res) => {
 })
 
 //EDIT character
-router.put("/update", validateJWT, async (req, res) => {
-    const { firstname, lastname, gender, age, dob } = req.body.character;
-    const owner_id = req.user.id;
-
+router.put("/update/:characterId", validateJWT, async (req, res) => {
+    const { firstname, lastname, gender, age, dob } = req.body.characters;
+    const userId = req.user.id
+    const characterId = req.params.characterId
     const query = {
         where: {
-            owner_id: owner_id
-        },
+            userId: userId,
+            id: characterId
+            //keyword for endpoint must match the parameter
+        }
     };
 
     const updatedCharacter = {

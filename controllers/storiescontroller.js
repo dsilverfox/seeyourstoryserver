@@ -70,14 +70,15 @@ router.get('/view/:id', validateJWT, async (req, res) => {
     }
 })
 //EDIT STORY
-router.put("/update/:id", validateJWT, async (req, res) => {
-            const {title, content} = req.body.story;
+router.put("/update/:storyId", validateJWT, async (req, res) => {
+            const {title, content} = req.body.stories;
             //same type of error as Journal edit.
             const userId = req.user.id
+            const storyId = req.params.storyId
             const query = {
                 where: {
                     userId: userId,
-                    id: req.params.id
+                    id: storyId
                     //keyword for endpoint must match the parameter
                 }
             };
@@ -85,7 +86,7 @@ router.put("/update/:id", validateJWT, async (req, res) => {
             const updatedStory = {
                 title:title,
                 content: content,
-                id: id
+                id: storyId
             };
 
             try {
@@ -97,16 +98,17 @@ router.put("/update/:id", validateJWT, async (req, res) => {
         });
 
 //DELETE STORY
-router.delete('/delete/id', validateJWT, async (req, res) => {
-            const owner_id = req.user.id;
-            const story_id = req.params.id;
+router.delete('/delete/:storyId', validateJWT, async (req, res) => {
+    const userId = req.user.id
+    const storyId = req.params.storyId
 
             try{
                 const query = {
                     where: {
-                        id: story_id,
-                        owner_id: owner_id
-                    },
+                        userId: userId,
+                        id: storyId
+                        //keyword for endpoint must match the parameter
+                    }
                 };
 
                 await StoriesModel.destroy(query);
