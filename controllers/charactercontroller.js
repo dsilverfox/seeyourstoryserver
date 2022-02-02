@@ -39,11 +39,11 @@ router.post('/create/:storyId', validateJWT, async (req, res) => {
 
 //VIEW ALL Characters
 router.get('/view', validateJWT, async (req, res) => {
-    const { id } = req.user
+    const userId = req.user.id
     try {
         const characterPage = await models.CharactersModel.findAll({
             where: {
-                owner_id: id
+                userId: userId
             }
         })
         res.status(200).json(characterPage);

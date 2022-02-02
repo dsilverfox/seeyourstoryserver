@@ -85,25 +85,26 @@ router.post('/login', validateJWT, async (req, res) => {
     }
 })
 
-// //USER VIEW ACCOUNT -- Failed
-// router.get('/view', validateJWT, async (req, res) => {
-//     const { id } = req.user
-//     try {
-//         const userProfile = await UsersModel.findAll({
-//             where: {
-//                 owner_id: id
-//             }
-//         })
-//         res.status(200).json(userProfile);
-//     } catch (err) {
-//         res.status(500).json({ Error: err })
-//     }
-// })
+//USER VIEW ACCOUNT -- Failed
+router.get('/view', validateJWT, async (req, res) => {
+    const { id } = req.user
+    try {
+        const userProfile = await models.UsersModel.findAll({
+            where: {
+                id: id
+            }
+        })
+        res.status(200).json(userProfile);
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ Error: err })
+    }
+})
 
 
 //USER DELETE ACCOUNT - Verified (requires user ID and Bearer token IN POSTMAN)
 
-router.delete('/delete/:id', validateJWT, async (req, res) =>{
+router.delete('/delete', validateJWT, async (req, res) =>{
     const id = req.user.id;
     try {
     const query = {
@@ -111,9 +112,10 @@ router.delete('/delete/:id', validateJWT, async (req, res) =>{
             id: id
         },
     };
-    await UsersModel.destroy(query);
+    await models.UsersModel.destroy(query);
     res.status(200).json({message: "User Removed"});
     } catch (err) {
+        console.log(err)
         res.status(500).json({error:err})
     }  
 })
@@ -154,8 +156,7 @@ router.get('/userinfo', adminSession, async (req, res) => {
 //ADMIN DELETE USER -- VERIFIED (Requires Admin Bearer Token and ID manual enter.)
 router.delete('/delete/:id', adminSession, async (req, res) => {
     const id = req.user.id;
-    const {hasAdmin} = req.user.hasAdmin
-    if(hasAdmin) {
+    console.log(req.user)
     try {
         const query = {
             where: {
@@ -166,8 +167,6 @@ router.delete('/delete/:id', adminSession, async (req, res) => {
         res.status(200).json({ message: "User Removed" });
     } catch (err) {
         res.status(500).json({ error: err })
-    } } else {
-        res.status(401).json({message: "I can't do that. You're not an admin."})
-    }
+    } 
 })
 module.exports = router;

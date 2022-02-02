@@ -36,8 +36,8 @@ router.post('/create', validateJWT, async (req, res) => {
 
 //VIEW ALL STORIES
 router.get("/view", validateJWT, async (req, res) => {
-    const { userId } = req.user.id;
-    // console.log(req.user)
+    const  userId  = req.user.id;
+    // console.log("ID", userId)
     try {
         const userStories = await models.StoriesModel.findAll({
             where: {
@@ -54,13 +54,14 @@ router.get("/view", validateJWT, async (req, res) => {
 // VIEW ONE STORY
 
 router.get('/view/:id', validateJWT, async (req, res) => {
-    const { id } = req.user
-    const story_id = req.params.id
-    try {
+    const  userId  = req.user.id
+        try {
+
         const storyPage = await models.StoriesModel.findAll({
             where: {
-                owner_id: id,
-                story_id: story_id
+                userId: userId,
+                id: req.params.id
+                //keyword for endpoint must match the parameter
             }
         })
         res.status(200).json(storyPage);
@@ -69,20 +70,22 @@ router.get('/view/:id', validateJWT, async (req, res) => {
     }
 })
 //EDIT STORY
-router.put("/update", validateJWT, async (req, res) => {
+router.put("/update/:id", validateJWT, async (req, res) => {
             const {title, content} = req.body.story;
-            const id = req.user.id;
-
+            //same type of error as Journal edit.
+            const userId = req.user.id
             const query = {
-               where: {
-                   id: id
-               },
+                where: {
+                    userId: userId,
+                    id: req.params.id
+                    //keyword for endpoint must match the parameter
+                }
             };
 
             const updatedStory = {
                 title:title,
                 content: content,
-                owner_id: owner_id
+                id: id
             };
 
             try {

@@ -9,14 +9,22 @@ router.get('/practice', (req, res) => {
 });
 
 //CREATE JOURNAL
-router.post('/create', validateJWT, async(req, res) => {
+router.post('/create/:characterId', validateJWT, async(req, res) => {
     const {title, content} = req.body.journal
     try {
-        const characterId = await req.characters.id
+        const characterId = req.params.characterId
+        const userId = req.user.id
+        const foundCharacter = await models.CharactersModel.findOne({
+            where: {
+                userId: userId,
+                id: characterId
+            }
+        })    
+         if(foundCharacter) {
         await models.JournalModel.create({
             title: title,
             content: content,
-            characterId: characterId
+            characterId: characterId,
         })
         .then(
             journal => {
@@ -25,7 +33,11 @@ router.post('/create', validateJWT, async(req, res) => {
                     message: 'journal created'
                 })
             }
-        )
+        ) } else {
+            res.status(401).json({
+                message: "Not Authorized"
+            })
+        }
     } catch (err) {
         res.status(500).json({
             error: `Failed to Create Journal: ${err}`
@@ -34,41 +46,50 @@ router.post('/create', validateJWT, async(req, res) => {
 });
 
 //VIEW Journal
-router.get('/view', validateJWT, async (req, res) => {
-    const { id } = req.user
+router.get('/view/:characterId', validateJWT, async (req, res) => {
+    const characterId = req.params.characterId
+    console.log(characterId)
     try {
-        const characterJournal = await models.JournalModel.findAll({
+        const journalPage = await models.JournalModel.findOne({
             where: {
-                owner_id: id
+                characterId: characterId
+                //keyword for endpoint must match the parameter
             }
         })
-        res.status(200).json(characterJournal);
+        res.status(200).json(journalPage);
     } catch (err) {
         res.status(500).json({ Error: err })
     }
 })
 
 //EDIT Journal
-router.put("/update", validateJWT, async (req, res) => {
-    const { title, content } = req.body.story;
-    const owner_id = req.user.id;
+router.put("/update/:journalId", validateJWT, async (req, res) => {
+     //const {title, content} = req.body.journal
+     // TypeError: Cannot destructure property 'title' of 'req.body.journal' as it is undefined.
+     // set title and content = req.journal.(title or content respectively) still returns error cannot read property title of undefined.
+    const journalId = req.params.id
+    const title = req.journal.title
+    const content = req.journal.content
+    console.log("Journal ID:", journalId)
+    console.log("Title:", title)
+    console.log("Content:", content)
 
     const query = {
         where: {
-            owner_id: owner_id
+            journalId: journalId
         },
     };
 
     const updatedJournal = {
         title: title,
         content: content,
-        owner_id: owner_id
     };
 
     try {
         const update = await models.JournalModel.update(updatedJournal, query);
         res.status(200).json(update);
     } catch (err) {
+        console.log(err);
         res.status(500).json({ error: err });
     }
 });

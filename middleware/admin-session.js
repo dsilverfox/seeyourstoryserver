@@ -4,7 +4,7 @@ const { models } = require('../models');
 const validateJWT = async (req, res, next) => {
     if (req.method == 'OPTIONS') {
         next();
-    } else if (req.headers.authorization && req.headers.authorization.includes('Bearer') && hasAdmin === true) {
+    } else if (req.headers.authorization && req.headers.authorization.includes('Bearer') && req.user.hasAdmin === true) {
         const { authorization } = req.headers;
         const payload = authorization ? jwt.verify(
             authorization.includes('Bearer') ? authorization.split(' ')[1] : authorization,
