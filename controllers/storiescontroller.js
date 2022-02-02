@@ -36,16 +36,18 @@ router.post('/create', validateJWT, async (req, res) => {
 
 //VIEW ALL STORIES
 router.get("/view", validateJWT, async (req, res) => {
-    const { id } = req.user.id;
+    const { userId } = req.user.id;
+    // console.log(req.user)
     try {
-        const userStories = await StoriesModel.findAll({
+        const userStories = await models.StoriesModel.findAll({
             where: {
-                id: id
+                userId: "fbbfe501-87aa-44e9-83d3-d6d4882f970e"
             }
         });
         res.status(200).json(userStories);
     } catch (err) {
-        res.status(500).json({ error: err });
+        console.log(err)
+        res.status(500).json(err);
     }
 });
 
@@ -69,11 +71,11 @@ router.get('/view/:id', validateJWT, async (req, res) => {
 //EDIT STORY
 router.put("/update", validateJWT, async (req, res) => {
             const {title, content} = req.body.story;
-            const owner_id = req.user.id;
+            const id = req.user.id;
 
             const query = {
                where: {
-                   owner_id: owner_id
+                   id: id
                },
             };
 
