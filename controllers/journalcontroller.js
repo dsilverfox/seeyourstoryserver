@@ -9,6 +9,7 @@ router.get('/practice', (req, res) => {
 });
 
 //CREATE JOURNAL
+
 router.post('/create/:characterId', validateJWT, async(req, res) => {
     const {title, content} = req.body.journal
     try {
@@ -46,6 +47,7 @@ router.post('/create/:characterId', validateJWT, async(req, res) => {
 });
 
 //VIEW Journal
+
 router.get('/view/:characterId', validateJWT, async (req, res) => {
     const characterId = req.params.characterId
     console.log(characterId)
@@ -63,12 +65,10 @@ router.get('/view/:characterId', validateJWT, async (req, res) => {
 })
 
 //EDIT Journal
+
 router.put("/update/:journalId", validateJWT, async (req, res) => {
     const {title, content} = req.body.journal
     const journalId = req.params.journalId
-    // console.log("Journal ID:", journalId)
-    // console.log("Title:", title)
-    // console.log("Content:", content)
 
     const query = {
         where: {
@@ -85,15 +85,14 @@ router.put("/update/:journalId", validateJWT, async (req, res) => {
         const update = await models.JournalModel.update(updatedJournal, query);
         res.status(200).json(update);
     } catch (err) {
-        console.log(err);
         res.status(500).json({ error: err });
     }
 });
 
 //DELETE Journal
+
 router.delete('/delete/:journalId', validateJWT, async (req, res) => {
     const journalId = req.params.journalId;
-
     try {
         const query = {
             where: {

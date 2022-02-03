@@ -9,10 +9,12 @@ router.get('/practice', (req, res) => {
 });
 
 //CREATE CHARACTER
+
 router.post('/create/:storyId', validateJWT, async (req, res) => {
     const { firstname, lastname, gender, age, dob} = req.body.characters
     try {
         const userId = await req.user.id
+
         await models.CharactersModel.create({
             firstname: firstname,
             lastname: lastname,
@@ -39,6 +41,7 @@ router.post('/create/:storyId', validateJWT, async (req, res) => {
 
 //VIEW ALL Characters
 router.get('/view', validateJWT, async (req, res) => {
+
     const userId = req.user.id
     try {
         const characterPage = await models.CharactersModel.findAll({
@@ -53,6 +56,7 @@ router.get('/view', validateJWT, async (req, res) => {
 })
 
 //VIEW ONE character
+
 
 router.get('/view/:characterId', validateJWT, async (req, res) => {
     const  userId  = req.user.id
@@ -71,6 +75,7 @@ router.get('/view/:characterId', validateJWT, async (req, res) => {
 })
 
 //EDIT character
+
 router.put("/update/:characterId", validateJWT, async (req, res) => {
     const { firstname, lastname, gender, age, dob } = req.body.characters;
     const userId = req.user.id
@@ -100,10 +105,10 @@ router.put("/update/:characterId", validateJWT, async (req, res) => {
 });
 
 //DELETE character
+
 router.delete('/delete/:characterId', validateJWT, async (req, res) => {
     const userId = req.user.id
     const characterId = req.params.characterId;
-
     try {
         const query = {
             where: {

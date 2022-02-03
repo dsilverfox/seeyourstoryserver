@@ -13,6 +13,7 @@ router.get('/practice', (req, res) => {
 router.post('/create', validateJWT, async (req, res) => {
     const { title, content } = req.body.stories
     try {
+
         const userId = await req.user.id
         await models.StoriesModel.create({
             title: title,
@@ -36,6 +37,7 @@ router.post('/create', validateJWT, async (req, res) => {
 
 //VIEW ALL STORIES
 router.get("/view", validateJWT, async (req, res) => {
+
     const  userId  = req.user.id;
     // console.log("ID", userId)
     try {
@@ -46,6 +48,7 @@ router.get("/view", validateJWT, async (req, res) => {
         });
         res.status(200).json(userStories);
     } catch (err) {
+
         // console.log(err)
         res.status(500).json(err);
     }
@@ -54,6 +57,7 @@ router.get("/view", validateJWT, async (req, res) => {
 // VIEW ONE STORY
 
 router.get('/view/:id', validateJWT, async (req, res) => {
+
     const  userId  = req.user.id
         try {
 
@@ -70,6 +74,7 @@ router.get('/view/:id', validateJWT, async (req, res) => {
     }
 })
 //EDIT STORY
+
 router.put("/update/:storyId", validateJWT, async (req, res) => {
             const {title, content} = req.body.stories;
             //same type of error as Journal edit.
@@ -86,6 +91,7 @@ router.put("/update/:storyId", validateJWT, async (req, res) => {
             const updatedStory = {
                 title:title,
                 content: content,
+
                 id: storyId
             };
 
@@ -98,10 +104,10 @@ router.put("/update/:storyId", validateJWT, async (req, res) => {
         });
 
 //DELETE STORY
+
 router.delete('/delete/:storyId', validateJWT, async (req, res) => {
     const userId = req.user.id
     const storyId = req.params.storyId
-
             try{
                 const query = {
                     where: {

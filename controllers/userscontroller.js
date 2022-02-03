@@ -8,6 +8,7 @@ let validateJWT = require("../middleware/validate-session");
 let adminSession = require("../middleware/admin-session");
 
 
+
 //Test Route -- Verified
 router.get('/practice', (req, res) => {
     res.send('Hey!! This is a practice route!')
@@ -15,6 +16,7 @@ router.get('/practice', (req, res) => {
 
 //USER SIGNUP -- Verified
 router.post('/signup', async (req, res) => {
+
     const { username, password, hasAdmin } = req.body.user;
     try {
         await models.UsersModel.create({
@@ -101,8 +103,8 @@ router.get('/view', validateJWT, async (req, res) => {
     }
 })
 
-
 //USER DELETE ACCOUNT - Verified (requires user ID and Bearer token IN POSTMAN)
+
 
 router.delete('/delete', validateJWT, async (req, res) =>{
     const id = req.user.id;
@@ -112,6 +114,7 @@ router.delete('/delete', validateJWT, async (req, res) =>{
             id: id
         },
     };
+
     await models.UsersModel.destroy(query);
     res.status(200).json({message: "User Removed"});
     } catch (err) {
@@ -126,6 +129,7 @@ router.delete('/delete', validateJWT, async (req, res) =>{
 //Admin View All Users (needs validation for admin rights.)
 
 //ADMIN VIEW ALL USERS VERIFIED
+
 router.get('/userinfo', adminSession, async (req, res) => {
        try {
        const users = await models.UsersModel.findAll();
