@@ -1,10 +1,11 @@
-const { DataTypes } = require('sequelize');
+
+const {DataTypes} = require('sequelize');
 const db = require('../db')
 
-const Characters = db.define('characters', {
+const Characters = db.define('characters',{
     id: {
         type: DataTypes.UUID,
-        primaryKey: true,
+        primaryKey:true,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false
     },
@@ -19,7 +20,7 @@ const Characters = db.define('characters', {
     gender: {
         type: DataTypes.STRING
     },
-    age: {
+    age:{
         type: DataTypes.INTEGER
     },
     dob: {
