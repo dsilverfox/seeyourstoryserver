@@ -5,6 +5,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { UniqueConstraintError } = require('sequelize/lib/errors');
 let validateJWT = require("../middleware/validate-session");
+let adminSession = require("../middleware/admin-session");
+
 
 
 //Test Route -- Verified
@@ -14,7 +16,8 @@ router.get('/practice', (req, res) => {
 
 //USER SIGNUP -- Verified
 router.post('/signup', async (req, res) => {
-    const { username, password } = req.body.user;
+
+    const { username, password, hasAdmin } = req.body.user;
     try {
         await models.UsersModel.create({
             username: username,
@@ -86,7 +89,8 @@ router.post('/login', validateJWT, async (req, res) => {
 
 //USER DELETE ACCOUNT - Verified (requires user ID and Bearer token IN POSTMAN)
 
-router.delete('/delete/:id', validateJWT, async (req, res) =>{
+
+router.delete('/delete', validateJWT, async (req, res) =>{
     const id = req.user.id;
     try {
     const query = {
@@ -94,9 +98,11 @@ router.delete('/delete/:id', validateJWT, async (req, res) =>{
             id: id
         },
     };
-    await UsersModel.destroy(query);
+
+    await models.UsersModel.destroy(query);
     res.status(200).json({message: "User Removed"});
     } catch (err) {
+        console.log(err)
         res.status(500).json({error:err})
     }  
 })
@@ -107,45 +113,30 @@ router.delete('/delete/:id', validateJWT, async (req, res) =>{
 //Admin View All Users (needs validation for admin rights.)
 
 //ADMIN VIEW ALL USERS VERIFIED
-router.get('/userinfo', async (req, res) => {
-    const { hasAdmin } = req.user.hasAdmin
-    if (hasAdmin) {
-    try {
-        await models.UsersModel.findAll({
-            include: [{
-                model: models.CharactersModel,
-                include: [{
-                    model: models.JournalModel
-                }],
-            }],
-            include: [{
-                model: models.StoriesModel
-            }]
-        })
-            .then(
-                users => {
-                    res.status(200).json({
+
+router.get('/userinfo', adminSession, async (req, res) => {
+       try {
+       const users = await models.UsersModel.findAll();
+
+            if(users) {
+                res.status(200).json({
                         users: users
                     });
+                } else {
+                    res.status(404).json({
+                        message: "User not found."
+                    })
                 }
-            )
     } catch (err) {
         res.status(500).json({
             error: `Failed to retrieve users: ${err}`
         });
     };
-    } else {
-        res.status(401).json({
-            message: "I can't do that. You're not an admin."
-        })
-    }
 });
 
 //ADMIN DELETE USER -- VERIFIED (Requires Admin Bearer Token and ID manual enter.)
-router.delete('/delete/:id', validateJWT, async (req, res) => {
-    const id = req.user.id;
-    const {hasAdmin} = req.user.hasAdmin
-    if(hasAdmin) {
+router.delete('/delete/:id', adminSession, async (req, res) => {
+    const id = req.params.id;
     try {
         const query = {
             where: {
@@ -156,8 +147,6 @@ router.delete('/delete/:id', validateJWT, async (req, res) => {
         res.status(200).json({ message: "User Removed" });
     } catch (err) {
         res.status(500).json({ error: err })
-    } } else {
-        res.status(401).json({message: "I can't do that. You're not an admin."})
-    }
+    } 
 })
 module.exports = router;

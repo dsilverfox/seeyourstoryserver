@@ -13,9 +13,12 @@ router.get('/practice', (req, res) => {
 router.post('/create', validateJWT, async (req, res) => {
     const { title, content } = req.body.stories
     try {
+
+        const userId = await req.user.id
         await models.StoriesModel.create({
             title: title,
             content: content,
+            userId: userId
         })
             .then(
                 stories => {
@@ -34,30 +37,35 @@ router.post('/create', validateJWT, async (req, res) => {
 
 //VIEW ALL STORIES
 router.get("/view", validateJWT, async (req, res) => {
-    const { id } = req.user;
+
+    const  userId  = req.user.id;
+    // console.log("ID", userId)
     try {
-        const userId = await req.user.userId
-        const userStories = await StoriesModel.findAll({
+        const userStories = await models.StoriesModel.findAll({
             where: {
                 userId: userId
             }
         });
         res.status(200).json(userStories);
     } catch (err) {
-        res.status(500).json({ error: err });
+
+        // console.log(err)
+        res.status(500).json(err);
     }
 });
 
 // VIEW ONE STORY
 
 router.get('/view/:id', validateJWT, async (req, res) => {
-    const { id } = req.user
-    const story_id = req.params.id
-    try {
+
+    const  userId  = req.user.id
+        try {
+
         const storyPage = await models.StoriesModel.findAll({
             where: {
-                owner_id: id,
-                story_id: story_id
+                userId: userId,
+                id: req.params.id
+                //keyword for endpoint must match the parameter
             }
         })
         res.status(200).json(storyPage);
@@ -66,20 +74,25 @@ router.get('/view/:id', validateJWT, async (req, res) => {
     }
 })
 //EDIT STORY
-router.put("/update", validateJWT, async (req, res) => {
-            const {title, content} = req.body.story;
-            const owner_id = req.user.id;
 
+router.put("/update/:storyId", validateJWT, async (req, res) => {
+            const {title, content} = req.body.stories;
+            //same type of error as Journal edit.
+            const userId = req.user.id
+            const storyId = req.params.storyId
             const query = {
-               where: {
-                   owner_id: owner_id
-               },
+                where: {
+                    userId: userId,
+                    id: storyId
+                    //keyword for endpoint must match the parameter
+                }
             };
 
             const updatedStory = {
                 title:title,
                 content: content,
-                owner_id: owner_id
+
+                id: storyId
             };
 
             try {
@@ -91,21 +104,23 @@ router.put("/update", validateJWT, async (req, res) => {
         });
 
 //DELETE STORY
-router.delete('/delete/id', validateJWT, async (req, res) => {
-            const owner_id = req.user.id;
-            const story_id = req.params.id;
 
+router.delete('/delete/:storyId', validateJWT, async (req, res) => {
+    const userId = req.user.id
+    const storyId = req.params.storyId
             try{
                 const query = {
                     where: {
-                        id: story_id,
-                        owner_id: owner_id
-                    },
+                        userId: userId,
+                        id: storyId
+                        //keyword for endpoint must match the parameter
+                    }
                 };
 
-                await StoriesModel.destroy(query);
+                await models.StoriesModel.destroy(query);
                 res.status(200).json({message: 'Story Removed'});
             } catch(err) {
+                console.log(err)
                 res.status(500).json({error: err});
             }
         })

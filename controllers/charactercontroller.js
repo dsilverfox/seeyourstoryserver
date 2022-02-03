@@ -9,15 +9,20 @@ router.get('/practice', (req, res) => {
 });
 
 //CREATE CHARACTER
-router.post('/create', validateJWT, async (req, res) => {
-    const { firstname, lastname, gender, age, dob } = req.body.characters
+
+router.post('/create/:storyId', validateJWT, async (req, res) => {
+    const { firstname, lastname, gender, age, dob} = req.body.characters
     try {
+        const userId = await req.user.id
+
         await models.CharactersModel.create({
             firstname: firstname,
             lastname: lastname,
             gender: gender,
             age: age,
-            dob: dob
+            dob: dob,
+            userId: userId,
+            storyId: req.params.storyId
         })
             .then(
                 characters => {
@@ -36,11 +41,12 @@ router.post('/create', validateJWT, async (req, res) => {
 
 //VIEW ALL Characters
 router.get('/view', validateJWT, async (req, res) => {
-    const { id } = req.user
+
+    const userId = req.user.id
     try {
         const characterPage = await models.CharactersModel.findAll({
             where: {
-                owner_id: id
+                userId: userId
             }
         })
         res.status(200).json(characterPage);
@@ -51,30 +57,35 @@ router.get('/view', validateJWT, async (req, res) => {
 
 //VIEW ONE character
 
-router.get('/view/:id', validateJWT, async (req, res) => {
-    const { id } = req.user
+
+router.get('/view/:characterId', validateJWT, async (req, res) => {
+    const  userId  = req.user.id
     try {
         const characterPage = await models.CharactersModel.findAll({
             where: {
-                owner_id: id,
-                character_id: req.params.id
+                userId: userId,
+                id: req.params.characterId
             }
         })
         res.status(200).json(characterPage);
     } catch (err) {
+        console.log(err)
         res.status(500).json({ Error: err })
     }
 })
 
 //EDIT character
-router.put("/update", validateJWT, async (req, res) => {
-    const { firstname, lastname, gender, age, dob } = req.body.character;
-    const owner_id = req.user.id;
 
+router.put("/update/:characterId", validateJWT, async (req, res) => {
+    const { firstname, lastname, gender, age, dob } = req.body.characters;
+    const userId = req.user.id
+    const characterId = req.params.characterId
     const query = {
         where: {
-            owner_id: owner_id
-        },
+            userId: userId,
+            id: characterId
+            //keyword for endpoint must match the parameter
+        }
     };
 
     const updatedCharacter = {
@@ -94,21 +105,22 @@ router.put("/update", validateJWT, async (req, res) => {
 });
 
 //DELETE character
-router.delete('/delete/:id', validateJWT, async (req, res) => {
-    const owner_id = req.user.id;
-    const character_id = req.params.id;
 
+router.delete('/delete/:characterId', validateJWT, async (req, res) => {
+    const userId = req.user.id
+    const characterId = req.params.characterId;
     try {
         const query = {
             where: {
-                id: character_id,
-                owner_id: owner_id
+                id: characterId,
+                userId: userId
             },
         };
 
-        await CharactersModel.destroy(query);
+        await models.CharactersModel.destroy(query);
         res.status(200).json({ message: 'Character Removed' });
     } catch (err) {
+        console.log(err)
         res.status(500).json({ error: err });
     }
 })
