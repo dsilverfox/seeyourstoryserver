@@ -84,22 +84,6 @@ router.post('/login', validateJWT, async (req, res) => {
     }
 })
 
-// //USER VIEW ACCOUNT -- Failed
-// router.get('/view', validateJWT, async (req, res) => {
-//     const { id } = req.user
-//     try {
-//         const userProfile = await UsersModel.findAll({
-//             where: {
-//                 owner_id: id
-//             }
-//         })
-//         res.status(200).json(userProfile);
-//     } catch (err) {
-//         res.status(500).json({ Error: err })
-//     }
-// })
-
-
 //USER DELETE ACCOUNT - Verified (requires user ID and Bearer token IN POSTMAN)
 
 router.delete('/delete/:id', validateJWT, async (req, res) =>{
