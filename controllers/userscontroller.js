@@ -7,8 +7,6 @@ const { UniqueConstraintError } = require('sequelize/lib/errors');
 let validateJWT = require("../middleware/validate-session");
 let adminSession = require("../middleware/admin-session");
 
-
-
 //Test Route -- Verified
 router.get('/practice', (req, res) => {
     res.send('Hey!! This is a practice route!')
