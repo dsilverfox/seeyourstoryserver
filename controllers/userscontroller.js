@@ -87,7 +87,6 @@ router.post('/login', validateJWT, async (req, res) => {
 
 //USER DELETE ACCOUNT - Verified (requires user ID and Bearer token IN POSTMAN)
 
-
 router.delete('/delete', validateJWT, async (req, res) =>{
     const id = req.user.id;
     try {
