@@ -127,26 +127,18 @@ router.delete('/delete', validateJWT, async (req, res) =>{
 
 //ADMIN VIEW ALL USERS VERIFIED
 router.get('/userinfo', adminSession, async (req, res) => {
-    console.log("User:", req.user)
-    try {
-        await models.UsersModel.findAll({
-            include: [{
-                model: models.CharactersModel,
-                include: [{
-                    model: models.JournalModel
-                }],
-            }],
-            include: [{
-                model: models.StoriesModel
-            }]
-        })
-            .then(
-                users => {
-                    res.status(200).json({
+       try {
+       const users = await models.UsersModel.findAll();
+
+            if(users) {
+                res.status(200).json({
                         users: users
                     });
+                } else {
+                    res.status(404).json({
+                        message: "User not found."
+                    })
                 }
-            )
     } catch (err) {
         res.status(500).json({
             error: `Failed to retrieve users: ${err}`
@@ -156,8 +148,7 @@ router.get('/userinfo', adminSession, async (req, res) => {
 
 //ADMIN DELETE USER -- VERIFIED (Requires Admin Bearer Token and ID manual enter.)
 router.delete('/delete/:id', adminSession, async (req, res) => {
-    const id = req.user.id;
-    console.log(req.user)
+    const id = req.params.id;
     try {
         const query = {
             where: {

@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const { models } = require('../models');
 
 const validateJWT = async (req, res, next) => {
+    console.log(req.user)
     if (req.method == 'OPTIONS') {
         next();
     } else if (req.headers.authorization && req.headers.authorization.includes('Bearer') || req.user.hasAdmin === true) {

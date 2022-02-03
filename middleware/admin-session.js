@@ -1,38 +1,40 @@
 const jwt = require('jsonwebtoken');
 const { models } = require('../models');
 
-const validateJWT = async (req, res, next) => {
 
+
+const validateJWT = async (req, res, next) => {
+      const checkProcess = (auth) => {
+        if(auth) {
+            models.UsersModel.findOne({
+                where:{
+                    id: auth.id
+                }
+            })
+            .then(user => {
+                if(user.hasAdmin) {
+                    next();
+                } else {
+                    res.status(401).json({
+                        Message: "Not Authorized for Admin Routes"
+                    })
+                }
+
+            })
+        }
+    }
+    console.log("HEADERS", req.headers)
     if (req.method == 'OPTIONS') {
         next();
-    } else if (req.headers.authorization && req.headers.authorization.includes('Bearer') && req.user.hasAdmin === true) {
+    } else if (req.headers.authorization && req.headers.authorization.includes('Bearer')) {
         const { authorization } = req.headers;
+        console.log("AUTH", authorization);
         const payload = authorization ? jwt.verify(
             authorization.includes('Bearer') ? authorization.split(' ')[1] : authorization,
             process.env.JWT_SECRET
-        ) : undefined;
-
-        if (payload) {
-            console.log(payload);
-            let foundUser = await models.UsersModel.findOne({
-                where: {
-                    id: payload.id
-                }
-            });
-
-            if (foundUser) {
-                req.user = foundUser;
-                next();
-            } else {
-                res.status(400).send({
-                    message: 'Not Authorized'
-                });
-            }
-        } else {
-            res.status(401).send({
-                message: 'Invalid token'
-            });
-        }
+            ) : undefined;
+            
+            checkProcess(payload);
     } else {
         res.status(403).send({
             message: 'Forbidden'
