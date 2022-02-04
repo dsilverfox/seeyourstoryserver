@@ -104,10 +104,9 @@ router.delete('/delete', validateJWT, async (req, res) =>{
     }  
 })
 
+
 /**ADMIN ENDPOINTS**/
 // Admin account has the ability to search all users and all of the posts stories and Characters. Admin has the right to delete any user.
-
-//Admin View All Users (needs validation for admin rights.)
 
 //ADMIN VIEW ALL USERS VERIFIED
 
