@@ -77,7 +77,6 @@ router.get('/view/:id', validateJWT, async (req, res) => {
 
 router.put("/update/:storyId", validateJWT, async (req, res) => {
             const {title, content} = req.body.stories;
-            //same type of error as Journal edit.
             const userId = req.user.id
             const storyId = req.params.storyId
             const query = {
