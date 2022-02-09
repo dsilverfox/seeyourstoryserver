@@ -22,6 +22,9 @@ router.post('/create', validateJWT, async (req, res) => {
         })
             .then(
                 stories => {
+                    //Added console log to troublsheoot error 503 when client interacts with server.
+                    console.log("Title", title)
+                    console.log("Content", content)
                     res.status(201).json({
                         stories: stories,
                         message: 'Story created'
