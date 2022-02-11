@@ -64,7 +64,7 @@ router.get('/view/:id', validateJWT, async (req, res) => {
     const  userId  = req.user.id
         try {
 
-        const storyPage = await models.StoriesModel.findAll({
+        const storyPage = await models.StoriesModel.findOne({
             where: {
                 userId: userId,
                 id: req.params.id
