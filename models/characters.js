@@ -11,11 +11,9 @@ const Characters = db.define('characters',{
     },
     firstname: {
         type: DataTypes.STRING,
-        allowNull: true
     },
     lastname: {
         type: DataTypes.STRING,
-        allowNull: true
     },
     gender: {
         type: DataTypes.STRING
@@ -24,8 +22,7 @@ const Characters = db.define('characters',{
         type: DataTypes.INTEGER
     },
     dob: {
-        type: DataTypes.DATE,
-        allowNull: false
+        type: DataTypes.STRING,
     }
 
 })
