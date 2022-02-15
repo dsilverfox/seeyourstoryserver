@@ -61,7 +61,7 @@ router.get('/view', validateJWT, async (req, res) => {
 router.get('/view/:characterId', validateJWT, async (req, res) => {
     const  userId  = req.user.id
     try {
-        const characterPage = await models.CharactersModel.findAll({
+        const characterPage = await models.CharactersModel.findOne({
             where: {
                 userId: userId,
                 id: req.params.characterId
@@ -77,7 +77,7 @@ router.get('/view/:characterId', validateJWT, async (req, res) => {
 //EDIT character
 
 router.put("/update/:characterId", validateJWT, async (req, res) => {
-    const { firstname, lastname, gender, age, dob } = req.body.characters;
+    const { firstname, lastname, gender, age, dob } = req.body.character;
     const userId = req.user.id
     const characterId = req.params.characterId
     const query = {
