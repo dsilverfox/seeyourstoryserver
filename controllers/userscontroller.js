@@ -37,6 +37,9 @@ router.post('/signup', async (req, res) => {
             res.status(409).json({
                 message: "Username is already in use."
             });
+            // if (message === "Username is already in use.") {
+            //     alert("Username is already in use")
+            // }
         } else {
             res.status(500).json({
                 error: `Failed to register user: ${err}`
